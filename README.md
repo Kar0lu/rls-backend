@@ -9,17 +9,17 @@
 ```
 python -m venv venv
 .\venv\Scripts\activate
-pip install ./backend/requirements.txt
+pip install -r requirements.txt
 ```
 ### Linux/ macOS
 ```
 python -m venv venv
 source venv/bin/activate
-pip install backend/requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Naming convention
 https://github.com/naming-convention/naming-convention-guides/blob/master/git/commit-message-naming.md
 
 ## Guide to open development enviroment
-https://fancy-rule-a93.notion.site/Dokumentacja-Proxmox-120078cd02fd806e8124d22415e49323?pvs=74
+https://fancy-rule-a93.notion.site/rodowisko-developerskie-12e078cd02fd8014a207e4ec7bd3cab1?pvs=4
