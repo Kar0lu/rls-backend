@@ -13,24 +13,21 @@ class Container(models.Model):
     name = models.CharField(max_length=50)
     init_script = models.FilePathField(path = '/root/deploy_scripts')
     # TODO: ask if users will be able to (specify ct resources)/(view ct resources will be visible to users)
-
-class Software(models.Model):
-    software_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    name = models.CharField(max_length=100)
-    software_path = models.FilePathField(path='/tools', allow_folders = True, allow_files = False) # TODO: check if this works for directory paths
     
     
 class Reservation(models.Model):
     reservation_id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable = False)
     created_at = models.DateTimeField(auto_now_add=True)
+    valid_since = models.DateTimeField()
     valid_until = models.DateTimeField()
-    software = models.ManyToManyField(Software)
     container = models.ForeignKey(Container, on_delete = models.CASCADE)
     user = models.ForeignKey(User, null = True, on_delete = models.SET_NULL)
+    root_password = models.CharField(max_length = 20)
 
 
 class Device(models.Model):
     device_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    name = models.CharField(max_length = 150)
     reservation = models.ForeignKey(Reservation, null = True, blank = True, on_delete = models.SET_NULL)
     device_path = models.FilePathField(path='/tools', allow_folders = True, allow_files = False) # TODO: check if this works for directory paths
     
