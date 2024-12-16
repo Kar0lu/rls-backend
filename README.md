@@ -23,3 +23,10 @@ https://github.com/naming-convention/naming-convention-guides/blob/master/git/co
 
 ## Guide to open development enviroment
 https://fancy-rule-a93.notion.site/rodowisko-developerskie-12e078cd02fd8014a207e4ec7bd3cab1?pvs=4
+
+## How to prepare database?
+From rls directory execute following:
+'''
+python manage.py makemigrations
+python manage.py migrate
+'''
