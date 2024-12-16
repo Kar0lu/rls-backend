@@ -26,7 +26,7 @@ https://fancy-rule-a93.notion.site/rodowisko-developerskie-12e078cd02fd8014a207e
 
 ## How to prepare database?
 From rls directory execute following:
-'''
+```
 python manage.py makemigrations
 python manage.py migrate
-'''
+```
