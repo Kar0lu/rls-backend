@@ -30,5 +30,10 @@ class Device(models.Model):
     name = models.CharField(max_length = 150)
     reservation = models.ForeignKey(Reservation, null = True, blank = True, on_delete = models.SET_NULL)
     device_path = models.FilePathField(path='/tools', allow_folders = True, allow_files = False) # TODO: check if this works for directory paths
+
+class Dictionary(models.Model):
+    dictionary_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    user = models.CharField(max_length = 6)
+    password = models.CharField(max_length = 15)
     
 
