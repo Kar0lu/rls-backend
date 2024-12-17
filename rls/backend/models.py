@@ -33,7 +33,7 @@ class Device(models.Model):
 
 class Dictionary(models.Model):
     dictionary_id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    user = models.CharField(max_length = 6)
-    password = models.CharField(max_length = 15)
+    sudo_name = models.CharField(max_length = 6)
+    sudo_password = models.CharField(max_length = 15)
     
 
