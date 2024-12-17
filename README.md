@@ -30,3 +30,13 @@ From rls directory execute following:
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+## How to wiev docs?
+In order to view auto-generated documentation do the following:
+```
+pip install -r requirements.txt
+python manage.py createsuperuser
+python manage.py runserver
+```
+After issuing second command you will be prompted to provide: username (required; default 'root'), email (optional), password (required)
+Open application followed by "/admin/doc" and log in using superuser account you created before
