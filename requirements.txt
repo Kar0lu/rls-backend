@@ -5,3 +5,6 @@ sqlparse==0.5.1
 typing-extensions==4.12.2
 djangorestframework==3.15.2;python_version>"3"
 docutils==0.21.2
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.6.0
+PyJWT==2.10.1
