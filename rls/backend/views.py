@@ -3,8 +3,10 @@ from rest_framework import permissions, viewsets
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from tutorial.quickstart.serializers import GroupSerializer, UserSerializer
 from backend.models.Container import Container
-from backend.serializers import ContainerSerializer
 from backend.auth.authentication_classes import IsAdminOrReadOnly
+from backend.models.Device import Device
+
+from backend.serializers import ContainerSerializer, DeviceSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,5 +31,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class ContainerViewSet(viewsets.ModelViewSet):
     queryset = Container.objects.all().order_by("pk")
     serializer_class = ContainerSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminOrReadOnly]
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    queryset = Device.objects.all().order_by("pk")
+    serializer_class = DeviceSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]

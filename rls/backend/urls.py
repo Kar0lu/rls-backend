@@ -1,12 +1,13 @@
 from django.urls import include, path
 from rest_framework import routers
 from tutorial.quickstart import views
-from backend.views import ContainerViewSet
+from backend.views import ContainerViewSet, DeviceViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'containers', ContainerViewSet)
+router.register(r'devices', DeviceViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
