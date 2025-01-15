@@ -14,3 +14,14 @@ class Reservation(models.Model):
     devices = models.ManyToManyField(Device, through = "Device_Reservation")
     user = models.ForeignKey(User, null = True, on_delete = models.SET_NULL)
     root_password = models.CharField(max_length = 20)
+
+    USES = (
+        ("PD", "Pending"),
+        ("IP", "In progress"),
+        ("FI", "Finished"),
+    )
+    status = models.CharField(
+        max_length = 2,
+        choices = USES,
+        default = "PD",
+    )
