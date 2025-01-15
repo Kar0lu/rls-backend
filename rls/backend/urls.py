@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from tutorial.quickstart import views
-from backend.views import ContainerViewSet, DeviceViewSet
+from backend.views import ContainerViewSet, DeviceViewSet, ContainerAvailability
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -13,4 +13,5 @@ router.register(r'devices', DeviceViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
+    path('containers/availability/<int:pk>/', ContainerAvailability.as_view()),
 ]
