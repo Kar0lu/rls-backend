@@ -10,8 +10,8 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     valid_since = models.DateTimeField()
     valid_until = models.DateTimeField()
-    container = models.ForeignKey(Container, on_delete = models.CASCADE)
-    devices = models.ManyToManyField(Device, through = "Device_Reservation")
+    container = models.ForeignKey(Container, on_delete = models.CASCADE, related_name = "reservations_rel")
+    devices = models.ManyToManyField(Device, through = "Device_Reservation", related_name = "reservations")
     user = models.ForeignKey(User, null = True, on_delete = models.SET_NULL)
     root_password = models.CharField(max_length = 20)
 

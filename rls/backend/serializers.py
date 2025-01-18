@@ -26,10 +26,13 @@ class ContainerSerializer(serializers.ModelSerializer):
 
 
 class DeviceSerializer(serializers.ModelSerializer):
+
+    reservations = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
+
     class Meta:
         model = Device
-        fields = ["device_id", "device_type", "device_path"]
-
+        fields = ["device_id", "device_type", "device_path", "reservations"]
+        extra_kwargs = {'reservations': {'required': False}}
 
 class DictionarySerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,12 +41,16 @@ class DictionarySerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    devices = serializers.PrimaryKeyRelatedField(many = True, read_only = False, queryset = Device.objects.all())
+
     class Meta:
         model = Reservation
-        fields = ["reservation_id", "created_at", "valid_since", "valid_until", "container", "devices", "user", "root_password", "status"]
+        fields = ["reservation_id", "created_at", "valid_since", "valid_until", "devices", "container", "user", "root_password", "status"]
+        extra_kwargs = {'devices': {'required': False}}
 
 
 class DeviceTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceType
         fields = ["device_type_id", "make", "model", "description"]
+        
