@@ -10,7 +10,7 @@ from backend.models.Container import Container
 from backend.models.Reservation import Reservation
 from backend.models.DeviceType import DeviceType
 
-from backend.serializers import ContainerSerializer, DeviceSerializer, ReservationSerializer, DeviceTypeSerializer, GroupSerializer, UserSerializer
+from backend.serializers import ContainerSerializer, DeviceSerializer, ReservationSerializer, DeviceTypeSerializer, UserSerializer
 
 from django.contrib.auth import get_user_model
 
