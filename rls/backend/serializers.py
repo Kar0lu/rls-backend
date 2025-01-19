@@ -10,16 +10,12 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    reservations = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
+
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
+        fields = ['url', 'username', 'email', 'reservations']
 
 
 class ContainerSerializer(serializers.ModelSerializer):

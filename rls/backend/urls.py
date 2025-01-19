@@ -1,12 +1,10 @@
 from django.urls import include, path
 from rest_framework import routers
-from tutorial.quickstart import views
-from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet
+from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet, GroupViewSet
 from backend.views.user_views import SchedulerAvailability
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'users', UserViewSet)
 router.register(r'containers', ContainerViewSet)
 router.register(r'devices', DeviceViewSet)
 router.register(r'reservations', ReservationViewSet)

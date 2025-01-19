@@ -2,7 +2,6 @@ from django.contrib.auth.models import Group
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from tutorial.quickstart.serializers import GroupSerializer, UserSerializer
 
 from backend.auth.permission_classes import IsAdminOrReadOnly, IsOwnerOrAdmin
 
@@ -11,7 +10,7 @@ from backend.models.Container import Container
 from backend.models.Reservation import Reservation
 from backend.models.DeviceType import DeviceType
 
-from backend.serializers import ContainerSerializer, DeviceSerializer, ReservationSerializer, DeviceTypeSerializer
+from backend.serializers import ContainerSerializer, DeviceSerializer, ReservationSerializer, DeviceTypeSerializer, GroupSerializer, UserSerializer
 
 from django.contrib.auth import get_user_model
 
@@ -25,17 +24,23 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrAdmin]
 
+    def list(self, request, *args, **kwargs):
+        print(request)
+        if request.user.is_staff == False:
+            response = {'message': 'List function is not available for non-admin users.'}
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        
+        queryset = self.filter_queryset(self.get_queryset())
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all().order_by('name')
-    serializer_class = GroupSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ContainerViewSet(viewsets.ModelViewSet):

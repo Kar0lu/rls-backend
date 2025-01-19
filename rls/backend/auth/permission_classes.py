@@ -1,5 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-# Change name to permissions_classes.py
+from django.contrib.auth.models import User
+
+
 class IsAdminOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
@@ -10,5 +12,9 @@ class IsAdminOrReadOnly(BasePermission):
 class IsOwnerOrAdmin(BasePermission):
     '''Checks if user is owner or admin'''
     def has_object_permission(self, request, view, obj):
-        return bool((request.user == obj.user) or
+        if isinstance(obj, User):
+            owner = obj
+        else:
+            owner = obj.user
+        return bool((request.user == owner) or
                     (request.user and request.user.is_staff))
