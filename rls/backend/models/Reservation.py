@@ -2,7 +2,9 @@ import uuid
 from django.db import models
 from .Container import Container
 from .Device import Device
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Reservation(models.Model):
     '''Stores single Reservation. Related to one :model:`backend.Container`, many :model:`backend.Device` and one :model:`auth.User`.'''
@@ -12,7 +14,7 @@ class Reservation(models.Model):
     valid_until = models.DateTimeField()
     container = models.ForeignKey(Container, on_delete = models.CASCADE, related_name = "reservations_rel")
     devices = models.ManyToManyField(Device, through = "Device_Reservation", related_name = "reservations")
-    user = models.ForeignKey(User, null = True, on_delete = models.SET_NULL)
+    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "reservations")
     root_password = models.CharField(max_length = 20)
 
     USES = (

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 from backend.models.Container import Container
@@ -6,6 +6,9 @@ from backend.models.Device import Device
 from backend.models.Dictionary import Dictionary
 from backend.models.Reservation import Reservation
 from backend.models.DeviceType import DeviceType
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -41,7 +44,9 @@ class DictionarySerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+
     devices = serializers.PrimaryKeyRelatedField(many = True, read_only = False, queryset = Device.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), required = True)
 
     class Meta:
         model = Reservation
