@@ -27,20 +27,11 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrAdmin]
 
     def list(self, request, *args, **kwargs):
-        print(request)
-        if request.user.is_staff == False:
-            response = {'message': 'List function is not available for non-admin users.'}
-            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        if request.user.is_staff == True:
+            return super().list(self, request, args, kwargs)
         
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        response = {'message': 'List function is not available for non-admin users.'}
+        return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 
 class ContainerViewSet(viewsets.ModelViewSet):
@@ -64,19 +55,11 @@ class ReservationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrAdmin]
 
     def list(self, request, *args, **kwargs):
-        if request.user.is_staff == False:
-            response = {'message': 'List function is not available for non-admin users.'}
-            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        if request.user.is_staff == True:
+            return super().list(self, request, args, kwargs)
         
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        response = {'message': 'List function is not available for non-admin users.'}
+        return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 
 class DeviceTypeViewSet(viewsets.ModelViewSet):

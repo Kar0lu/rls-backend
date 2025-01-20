@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet, GroupViewSet
+from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet
 from backend.views.user_views import SchedulerAvailability
 
 router = routers.DefaultRouter()
