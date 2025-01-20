@@ -55,7 +55,6 @@ def container_availability(year, month, time_slots):
 
 class SchedulerAvailability(APIView):
 
-    authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):

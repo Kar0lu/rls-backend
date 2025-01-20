@@ -23,7 +23,6 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsOwnerOrAdmin]
 
     def list(self, request, *args, **kwargs):
@@ -37,21 +36,18 @@ class UserViewSet(viewsets.ModelViewSet):
 class ContainerViewSet(viewsets.ModelViewSet):
     queryset = Container.objects.all().order_by("pk")
     serializer_class = ContainerSerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
 class DeviceViewSet(viewsets.ModelViewSet):
     queryset = Device.objects.all().order_by("pk")
     serializer_class = DeviceSerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all().order_by("pk")
     serializer_class = ReservationSerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsOwnerOrAdmin]
 
     def list(self, request, *args, **kwargs):
@@ -65,5 +61,4 @@ class ReservationViewSet(viewsets.ModelViewSet):
 class DeviceTypeViewSet(viewsets.ModelViewSet):
     queryset = DeviceType.objects.all().order_by("pk")
     serializer_class = DeviceTypeSerializer
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
