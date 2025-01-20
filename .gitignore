@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 
 rls/backend/migrations/*
+
+.vscode
