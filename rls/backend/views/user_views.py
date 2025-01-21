@@ -1,4 +1,4 @@
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from copy import deepcopy
 from rest_framework import permissions
 
 from django.http import JsonResponse
@@ -14,7 +14,7 @@ from calendar import monthrange
 from json import loads
 
 def flip_taken(device_reservations, date, default_not_taken):
-    to_return = default_not_taken
+    to_return = deepcopy(default_not_taken)
     for device_id, reservations in device_reservations.items():
         if not len(reservations) == 0:
             for reservation in reservations:
@@ -34,7 +34,7 @@ def container_availability(year, month, time_slots):
     to_return = {}
     for container in all_containers:
         
-        to_return[str(container.pk)] = {str(day).zfill(2):time_slots for day in range(1, monthrange(year, int(month))[1]+1)}
+        to_return[str(container.pk)] = {str(day).zfill(2):deepcopy(time_slots) for day in range(1, monthrange(year, int(month))[1]+1)}
         container_reservations_this_month = container.reservations_rel.filter(valid_since__year = year, valid_since__month = month)
         if len(list(container_reservations_this_month)) == 0:
             continue
@@ -43,9 +43,6 @@ def container_availability(year, month, time_slots):
             start_slot = reservation.valid_since.time().hour
             end_slot = reservation.valid_until.time().hour
             for slot in range(start_slot, end_slot):
-                # print("1D: " + str(container.pk))
-                # print("2D: " + str(reservation.valid_since.day).zfill(2))
-                # print("3D: " + str(slot).zfill(2))
                 to_return[str(container.pk)][str(reservation.valid_since.day).zfill(2)][str(slot).zfill(2)] = False
 
 
@@ -74,7 +71,7 @@ class SchedulerAvailability(APIView):
                 devices_reservations[str(temp_device['pk'])] = Reservation.objects.all().filter(valid_since__year = year,
                                                                                                 valid_since__month = month,
                                                                                                 devices__pk = temp_device['pk'])
-                devices[str(temp_device['pk'])] = time_slots # each device id appended as a key to available time slots
+                devices[str(temp_device['pk'])] = deepcopy(time_slots) # each device id appended as a key to available time slots
 
         month = str(month).zfill(2)
         ct_availability = container_availability(year, month, time_slots)
