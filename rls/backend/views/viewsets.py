@@ -1,16 +1,21 @@
-from django.contrib.auth.models import Group
-from rest_framework import permissions, viewsets, status
-from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied
 
-from backend.auth.permission_classes import IsAdminOrReadOnly, IsOwnerOrAdmin
+from backend.auth.permission_classes import (IsAdminOrReadOnly,
+                                            IsOwnerOrAdmin)
 
 from backend.models.Device import Device
 from backend.models.Container import Container
 from backend.models.Reservation import Reservation
 from backend.models.DeviceType import DeviceType
+from backend.models.Offence import Offence
 
-from backend.serializers import ContainerSerializer, DeviceSerializer, ReservationSerializer, DeviceTypeSerializer, UserSerializer
+from backend.serializers import (ContainerSerializer, 
+                                DeviceSerializer,
+                                ReservationSerializer,
+                                DeviceTypeSerializer,
+                                UserSerializer,
+                                OffenceSerializer)
 
 from django.contrib.auth import get_user_model
 
@@ -29,8 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.user.is_staff == True:
             return super().list(self, request, args, kwargs)
         
-        response = {'message': 'List function is not available for non-admin users.'}
-        return Response(response, status=status.HTTP_403_FORBIDDEN)
+        raise PermissionDenied(detail = 'List function is not available for non-admin users. This situation will be reported to admin.')
 
 
 class ContainerViewSet(viewsets.ModelViewSet):
@@ -54,11 +58,16 @@ class ReservationViewSet(viewsets.ModelViewSet):
         if request.user.is_staff == True:
             return super().list(self, request, args, kwargs)
         
-        response = {'message': 'List function is not available for non-admin users.'}
-        return Response(response, status=status.HTTP_403_FORBIDDEN)
+        raise PermissionDenied(detail = 'List function is not available for non-admin users. This situation will be reported to admin.')
 
 
 class DeviceTypeViewSet(viewsets.ModelViewSet):
     queryset = DeviceType.objects.all().order_by("pk")
     serializer_class = DeviceTypeSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class OffenceViewSet(viewsets.ModelViewSet):
+    queryset = Offence.objects.all().order_by("-commited_at")
+    serializer_class = OffenceSerializer
     permission_classes = [IsAdminOrReadOnly]

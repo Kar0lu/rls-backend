@@ -1,6 +1,8 @@
 from rest_framework import permissions
+from rest_framework.exceptions import NotFound
 
-from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 
 from backend.models.Device import Device
@@ -15,7 +17,11 @@ def device_availability(device_types, year, month):
     to_return = {}
     
     for device_type in device_types:
-        devices = Device.objects.all().filter(device_type__pk = device_type)
+
+        try:
+            devices = Device.objects.all().filter(device_type__pk = device_type)
+        except:
+            raise NotFound(detail = f'No devices of type {device_type} found.')
 
         for device in devices:
             device_reservations = device.reservations.filter(valid_since__year = year, valid_since__month = month)
@@ -77,4 +83,4 @@ class SchedulerAvailability(APIView):
                 result[day]["containers"][ctid] = ct_availability[ctid][day]
         
 
-        return JsonResponse(result)
+        return Response(result, status = status.HTTP_200_OK)
