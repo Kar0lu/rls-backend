@@ -1,4 +1,4 @@
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
 
 from rest_framework.response import Response
@@ -59,7 +59,7 @@ def container_availability(year, month):
 
 class SchedulerAvailability(APIView):
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         
