@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet
+from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet, CreateUser
 from backend.views.availability import SchedulerAvailability
 from backend.views.user_reservability import UserReservability
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('availability/', SchedulerAvailability.as_view()),
     path('reservability/<int:user_id>/', UserReservability.as_view()),
     path('reservability/', UserReservability.as_view()),
+    path('register/', CreateUser.as_view()),
 ]

@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from rest_framework.generics import CreateAPIView
 from rest_framework.exceptions import PermissionDenied
 
 from backend.auth.permission_classes import (IsAdminOrReadOnly,
@@ -23,7 +24,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class UserViewSet(viewsets.ModelViewSet):
+
+
+class UserViewSet(mixins.RetrieveModelMixin, 
+                mixins.UpdateModelMixin,
+                mixins.DestroyModelMixin,
+                mixins.ListModelMixin,
+                viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -36,6 +43,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return super().list(self, request, args, kwargs)
         
         raise PermissionDenied(detail = 'List function is not available for non-admin users. This situation will be reported to admin.')
+    
+
+
+class CreateUser(CreateAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class ContainerViewSet(viewsets.ModelViewSet):
