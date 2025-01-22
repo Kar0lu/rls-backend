@@ -61,13 +61,16 @@ class SchedulerAvailability(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def get(self, request):
         
         result = {}
-        body = loads(request.body.decode('utf-8'))
-        year = int(body['year'])
-        month = int(body['month'])
-        device_types = body['device_types']
+        # body = loads(request.body.decode('utf-8'))
+        # year = int(body['year'])
+        # month = int(body['month'])
+        # device_types = body['device_types']
+        year = int(request.query_params.get('year'))
+        month = int(request.query_params.get('month'))
+        device_types = request.query_params.getlist('device_types')
         
         devices_reservations = device_availability(device_types, year, month)
         ct_availability = container_availability(year, month)
