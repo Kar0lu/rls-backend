@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-def total_user_hours(user):
+def total_user_hours_left(user):
     user_reservations = user.reservations.filter(valid_since__gte = datetime.now())
     current_hours = 0
 
@@ -22,10 +22,10 @@ def total_user_hours(user):
 
         for hour in range(start, end):
             current_hours += 1
-    return current_hours
+    return int(environ['MAXIMUM_RESERVATION']) - current_hours
 
 
-class UserReservability(APIView):
+class HoursLeft(APIView):
 
     permission_classes = [IsOwnerOrAdmin & IsAuthenticated]
 
@@ -43,7 +43,7 @@ class UserReservability(APIView):
         else:
             user = request.user
 
-        return Response({"hours_left": int(environ['MAXIMUM_RESERVATION']) - total_user_hours(user)}, status = status.HTTP_200_OK)
+        return Response({"hours_left": total_user_hours_left(user)}, status = status.HTTP_200_OK)
 
         
 

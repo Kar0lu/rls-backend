@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 from backend.views.viewsets import ContainerViewSet, DeviceViewSet, ReservationViewSet, DeviceTypeViewSet, UserViewSet, CreateUser
 from backend.views.availability import SchedulerAvailability
-from backend.views.user_reservability import UserReservability
+from backend.views.hours_left import HoursLeft
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -16,7 +16,7 @@ router.register(r'deviceTypes', DeviceTypeViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('availability/', SchedulerAvailability.as_view()),
-    path('reservability/<int:user_id>/', UserReservability.as_view()),
-    path('reservability/', UserReservability.as_view()),
+    path('user/<int:user_id>/hoursLeft/', HoursLeft.as_view()),
+    path('user/hoursLeft/', HoursLeft.as_view()),
     path('register/', CreateUser.as_view()),
 ]
