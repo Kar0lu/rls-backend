@@ -43,9 +43,7 @@ class UserReservability(APIView):
         else:
             user = request.user
 
-        is_allowed = bool(total_user_hours(user) <= int(environ['MAXIMUM_RESERVATION']))
-
-        return Response({"allowed": is_allowed}, status = status.HTTP_200_OK)
+        return Response({"hours_left": int(environ['MAXIMUM_RESERVATION']) - total_user_hours(user)}, status = status.HTTP_200_OK)
 
         
 
