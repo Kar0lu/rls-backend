@@ -164,3 +164,7 @@ cython_debug/
 rls/backend/migrations/*
 
 .vscode
+
+# User's files
+
+users/

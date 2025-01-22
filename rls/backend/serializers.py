@@ -1,3 +1,4 @@
+import os
 from rest_framework import serializers
 
 from backend.models.Container import Container
@@ -38,9 +39,12 @@ class UserSerializer(serializers.ModelSerializer):
             last_name=validated_data['last_name']
         )
 
-        
         user.set_password(validated_data['password'])
         user.save()
+
+        user_dir = f'{os.environ("DJANGO_MEDIA_ROOT")}/{str(user.pk)}'
+        if not os.path.exists(user_dir):
+            os.makedirs(user_dir)
 
         return user
 
