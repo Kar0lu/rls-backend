@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from backend.models.Container import Container
 from backend.models.Device import Device
-from backend.models.Dictionary import Dictionary
 from backend.models.Reservation import Reservation
 from backend.models.DeviceType import DeviceType
 from backend.models.Offence import Offence
@@ -65,11 +64,6 @@ class DeviceSerializer(serializers.ModelSerializer):
         fields = ["device_id", "device_type", "device_path", "reservations"]
         extra_kwargs = { 'reservations': { 'required': False },
                         'device_id': { 'read_only': True } }
-
-class DictionarySerializer(serializers.ModelSerializer):
-    class Meta:
-        model =  Dictionary
-        fields = ["dictionary_id", "sudo_name", "sudo_password"]
         
 
 
