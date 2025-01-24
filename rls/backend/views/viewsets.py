@@ -17,7 +17,8 @@ from backend.serializers import (ContainerSerializer,
                                 ReservationSerializer,
                                 DeviceTypeSerializer,
                                 UserSerializer,
-                                OffenceSerializer)
+                                OffenceSerializer,
+                                ReservationWithUserAndDevicesDataSerializer)
 
 from django.contrib.auth import get_user_model
 
@@ -68,6 +69,11 @@ class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all().order_by("pk")
     serializer_class = ReservationSerializer
     permission_classes = [IsOwnerOrAdmin & IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.GET.get("extra", True):
+            return ReservationWithUserAndDevicesDataSerializer
+        return UserSerializer
 
     def list(self, request, *args, **kwargs):
         if request.user.is_staff == True:

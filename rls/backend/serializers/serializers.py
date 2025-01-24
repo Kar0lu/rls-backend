@@ -59,9 +59,17 @@ class ContainerSerializer(serializers.ModelSerializer):
         extra_kwargs = { 'container_id': { 'read_only': True } }
 
 
+class DeviceTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceType
+        fields = ["device_type_id", "make", "model", "description"]
+        extra_kwargs = { 'device_type_id': { 'read_only': True } }
+
+
 class DeviceSerializer(serializers.ModelSerializer):
 
     reservations = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
+    device_type = DeviceTypeSerializer(Device.objects.all())
 
     class Meta:
         model = Device
@@ -73,7 +81,7 @@ class DeviceSerializer(serializers.ModelSerializer):
 
 class ReservationSerializer(serializers.ModelSerializer):
 
-    devices = serializers.PrimaryKeyRelatedField(many = True, read_only = False, queryset = Device.objects.all())
+    devices = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
     user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), required = True)
 
     class Meta:
@@ -81,14 +89,8 @@ class ReservationSerializer(serializers.ModelSerializer):
         fields = ["reservation_id", "created_at", "valid_since", "valid_until", "devices", "container", "user", "root_password", "status"]
         extra_kwargs = { 'devices': { 'required': False },
                         'reservation_id': { 'read_only': True } }
-
-
-class DeviceTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeviceType
-        fields = ["device_type_id", "make", "model", "description"]
-        extra_kwargs = { 'device_type_id': { 'read_only': True } }
-
+        
+        
 
 class OffenceSerializer(serializers.ModelSerializer):
 
