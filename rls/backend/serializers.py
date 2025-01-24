@@ -1,11 +1,12 @@
 import os
 from rest_framework import serializers
 
-from backend.models.Container import Container
-from backend.models.Device import Device
-from backend.models.Reservation import Reservation
-from backend.models.DeviceType import DeviceType
-from backend.models.Offence import Offence
+from backend.models import (UserProfile,
+                            Offence,
+                            DeviceType,
+                            Reservation,
+                            Device,
+                            Container)
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -41,9 +42,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        user_dir = f'{os.environ("DJANGO_MEDIA_ROOT")}/{str(user.pk)}'
+        user_profile = UserProfile.objects.create(user = user)
+
+        user_dir = f'{os.getenv("DJANGO_MEDIA_ROOT")}/{str(user_profile.uuid)}'
         if not os.path.exists(user_dir):
             os.makedirs(user_dir)
+            os.chmod(user_dir, 0o777)
 
         return user
 

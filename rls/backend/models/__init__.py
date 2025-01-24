@@ -1,3 +1,4 @@
+from .UserProfile import UserProfile
 from .Container import Container
 from .Device import Device
 from .Device_Reservation import Device_Reservation
