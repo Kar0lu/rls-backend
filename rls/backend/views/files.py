@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.http import FileResponse
 import os
 from datetime import datetime
+from rest_framework.exceptions import NotFound
 
 class ListFilesView(APIView):
 
@@ -41,8 +42,8 @@ class RetrieveFileView(APIView):
 
     def get(self, request):
         filepath = os.path.join(self._media_root, str(request.user.profile.uuid), request.query_params.get('filepath'))
-        print(filepath)
-        response = FileResponse(open(filepath, "rb"), content_type = 'text/plain')
+        try: response = FileResponse(open(filepath, "rb"), content_type = 'text/plain')
+        except: return NotFound(detail = f'File {filepath} not found i user\'s directory')
         response['Content-Disposition'] = f'attachement; filename={filepath.split("/")[-1]}'
         return response
         

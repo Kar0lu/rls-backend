@@ -4,5 +4,4 @@ venv/
 **/*.pyc
 **/*.pyo
 **/*.pyd
-rls/backend/migrations/
 users/

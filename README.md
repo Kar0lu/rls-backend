@@ -4,6 +4,19 @@
 - Karol Godlewski
 - Karol Pacwa
 
+## Starting application
+### Prerequisites
+- Installed Docker (installation instructions available here: https://www.docker.com/get-started/)
+### Linux
+- Clone this repository using ```git clone https://github.com/Kar0lu/rls-backend.git```.
+- Open favourite terminal and from root of repository execute following lines:
+```
+source .env
+docker compose up --build
+```
+### Windows
+
+
 ## Creating a Virtual Environment
 ### Windows
 ```
