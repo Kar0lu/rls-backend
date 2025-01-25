@@ -71,9 +71,11 @@ class ReservationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrAdmin & IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.GET.get("extra", True):
+        try: extra = bool(self.request.GET.get("extra"))
+        except: extra = False
+        if extra == True:
             return ReservationWithUserAndDevicesDataSerializer
-        return UserSerializer
+        return ReservationSerializer
 
     def list(self, request, *args, **kwargs):
         if request.user.is_staff == True:
