@@ -28,10 +28,10 @@ User = get_user_model()
 
 
 class UserViewSet(mixins.RetrieveModelMixin, 
-                mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin,
-                mixins.ListModelMixin,
-                viewsets.GenericViewSet):
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
