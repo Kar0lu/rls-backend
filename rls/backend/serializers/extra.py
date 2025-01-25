@@ -3,6 +3,7 @@ from rest_framework import serializers
 from backend.models import (DeviceType,
                             Reservation,
                             Device)
+from backend.serializers import ContainerSerializer
 
 from django.contrib.auth import get_user_model
 
@@ -41,6 +42,7 @@ class ReservationWithUserAndDevicesDataSerializer(serializers.ModelSerializer):
 
     devices = DeviceSerializer(read_only = True, many = True)
     user = UserFirstAndLastNames(read_only = True)
+    container = ContainerSerializer(read_only = True)
 
     class Meta:
         model = Reservation
