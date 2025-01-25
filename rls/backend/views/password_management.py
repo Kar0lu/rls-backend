@@ -12,13 +12,8 @@ class ChangePassword(GenericAPIView):
     permission_classes = [IsAdminUser]
 
     def put(self, request, id):
-        password = request.data['password']
         new_password = request.data['new_password']
-
         obj = get_user_model().objects.get(pk=id)
-        if not obj.check_password(raw_password=password):
-            return Response({'error': 'password not match'}, status=400)
-        else:
-            obj.set_password(new_password)
-            obj.save()
-            return Response({'success': 'password changed successfully'}, status=200)
+        obj.set_password(new_password)
+        obj.save()
+        return Response({'success': 'password changed successfully'}, status=200)
