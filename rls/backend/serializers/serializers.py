@@ -81,7 +81,7 @@ class DeviceSerializer(serializers.ModelSerializer):
 
 class ReservationSerializer(serializers.ModelSerializer):
 
-    devices = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
+    devices = serializers.PrimaryKeyRelatedField(many = True, queryset = Device.objects.all())
     user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), required = True)
 
     class Meta:
