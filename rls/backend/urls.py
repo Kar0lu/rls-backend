@@ -10,6 +10,7 @@ from backend.views.availability import SchedulerAvailability
 from backend.views.hours_left import HoursLeft
 from backend.views.files import ListFilesView, RetrieveFileView
 from backend.views.list_user_reservations import ListUserReservations
+from backend.views.password_management import ChangePassword
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -28,4 +29,5 @@ urlpatterns = [
     path('user/files/', ListFilesView.as_view()),
     path('user/file/', RetrieveFileView.as_view()),
     path('user/reservations/', ListUserReservations.as_view()),
+    path('changePassword/<int:id>/', ChangePassword.as_view()),
 ]

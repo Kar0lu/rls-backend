@@ -51,6 +51,11 @@ class UserSerializer(serializers.ModelSerializer):
             os.chmod(user_dir, 0o777)
 
         return user
+    
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
 
 class ContainerSerializer(serializers.ModelSerializer):

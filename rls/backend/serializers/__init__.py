@@ -3,6 +3,7 @@ from .serializers import (UserSerializer,
                           DeviceSerializer,
                           DeviceTypeSerializer,
                           ReservationSerializer,
-                          OffenceSerializer)
+                          OffenceSerializer,
+                          ChangePasswordSerializer)
 
 from .extra import ReservationWithUserAndDevicesDataSerializer
