@@ -6,11 +6,11 @@ from backend.auth.permission_classes import (IsAdminOrReadOnly,
                                             IsOwnerOrAdmin)
 from rest_framework.permissions import IsAuthenticated
 
-from backend.models.Device import Device
-from backend.models.Container import Container
-from backend.models.Reservation import Reservation
-from backend.models.DeviceType import DeviceType
-from backend.models.Offence import Offence
+from backend.models import (Device,
+                            Container,
+                            Reservation,
+                            DeviceType,
+                            Offence)
 
 from backend.serializers import (ContainerSerializer, 
                                 DeviceSerializer,
