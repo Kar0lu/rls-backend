@@ -1,17 +1,18 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import FileResponse
 import os
 from datetime import datetime
 
 class ListFilesView(APIView):
 
     permission_classes = [IsAuthenticated]
-    media_root = os.getenv("DJANGO_MEDIA_ROOT")
+    _media_root = os.getenv("DJANGO_MEDIA_ROOT")
 
     def get(self, request):
 
-        path = os.path.join(self.media_root, str(request.user.profile.uuid)) + "/"
+        path = os.path.join(self._media_root, str(request.user.profile.uuid)) + "/"
 
         to_return = {}
         to_return["files"] = []
@@ -36,8 +37,12 @@ class ListFilesView(APIView):
 class RetrieveFileView(APIView):
 
     permission_classes = [IsAuthenticated]
+    _media_root = os.getenv("DJANGO_MEDIA_ROOT")
 
     def get(self, request):
-        # path = os.path.join(self.media_root, request.user.profile.uuid, request.query_params.get('path'))
-        # return Response({"path": path})
-        pass
+        filepath = os.path.join(self._media_root, str(request.user.profile.uuid), request.query_params.get('filepath'))
+        print(filepath)
+        response = FileResponse(open(filepath, "rb"), content_type = 'text/plain')
+        response['Content-Disposition'] = f'attachement; filename={filepath.split("/")[-1]}'
+        return response
+        
