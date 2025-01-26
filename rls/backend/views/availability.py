@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 
 from backend.models import (Device,
                             Container,
-                            Reservation)
+                            Reservation,
+                            DeviceType)
 
 from calendar import monthrange
 
@@ -76,9 +77,10 @@ def compute_day(year, month, day, device_types):
                 "ct_id": str(ct_id), "availability": list(av.values())})
 
     for dev_id, day_av in dev_reservations.items():
+        dev_type = DeviceType.objects.get(devices__pk = dev_id).pk
         for day_of_av, av in day_av.items():
             if day_of_av == str(day).zfill(2): to_return[f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}']["devices"].append({
-                "dev_id": str(dev_id), "availability": list(av.values())})
+                "dev_id": str(dev_id), "dev_type": str(dev_type), "availability": list(av.values())})
 
     return to_return 
 
