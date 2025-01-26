@@ -18,8 +18,8 @@ def device_availability(device_types, year, month, **kwargs):
     to_return = {}
     
     for device_type in device_types:
-
-        devices = Device.objects.all().filter(device_type__pk = device_type)
+        try: devices = Device.objects.all().filter(pk__in = kwargs["dev_pk"])
+        except: devices = Device.objects.all().filter(device_type__pk = device_type)
         if len(list(devices)) == 0: raise NotFound(detail = f'No devices of type {device_type} found.')
 
         for device in devices:
@@ -40,7 +40,8 @@ def device_availability(device_types, year, month, **kwargs):
 
 def container_availability(year, month, **kwargs):
 
-    all_containers = list(Container.objects.all().filter(available = True))
+    try: all_containers = list(Container.objects.get(pk = kwargs["ct_pk"], available = True))
+    except: all_containers = list(Container.objects.all().filter(available = True))
     to_return = {}
     for container in all_containers:
         

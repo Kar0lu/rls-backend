@@ -1,6 +1,8 @@
 from rest_framework import viewsets, mixins
 from rest_framework.generics import CreateAPIView
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ParseError
+
+from datetime import datetime
 
 from backend.auth.permission_classes import (IsAdminOrReadOnly,
                                             IsOwnerOrAdmin)
@@ -11,6 +13,9 @@ from backend.models import (Device,
                             Reservation,
                             DeviceType,
                             Offence)
+
+from backend.views.availability import (container_availability,
+                                        device_availability)
 
 from backend.serializers import (ContainerSerializer, 
                                 DeviceSerializer,
@@ -69,6 +74,35 @@ class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all().order_by("pk")
     serializer_class = ReservationSerializer
     permission_classes = [IsOwnerOrAdmin & IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try: 
+            container = str(request.data["container"])
+            devices = list(request.data["devices"])
+            start_date = datetime.fromisoformat(request.data["valid_since"])
+            end_date = datetime.fromisoformat(request.data["valid_until"])
+        except: raise ParseError(detail = "Wrong request format")
+        if (start_date.day != end_date.day) or (start_date.time().hour > end_date.time().hour):
+            raise ParseError(detail = "Wrong reservation dates.")
+        
+        kwargs = {"ct_pk": container}
+        ct_availability = container_availability(start_date.year, start_date.month, **kwargs)
+        ct_availability = ct_availability[container][str(start_date.day).zfill(2)]
+
+        for slot, av in ct_availability.items():
+            if int(slot) in range(start_date.time().hour, end_date.time().hour) and av == False:
+                raise ParseError(detail = "Container is unavailable in selected time.")
+            
+        kwargs = {'day': start_date.day, 'dev_pk': devices}
+        dev_availability = device_availability([1], start_date.year, start_date.month, **kwargs)
+        for device in devices:
+            dev_av = dev_availability[device][str(start_date.day).zfill(2)]
+            for slot, av in dev_av.items():
+                if int(slot) in range(start_date.time().hour, end_date.time().hour) and av == False:
+                    raise ParseError(detail = f'Device {device} is unavailable in selected time.')
+                
+        return super().create(request, *args, **kwargs)
+
 
     def get_serializer_class(self):
         try: extra = bool(self.request.GET.get("extra"))
