@@ -25,19 +25,6 @@ docker compose up
 If you pulled from origin and want to build fresh Docker image instead of using ```docker compose up``` invoke ```docker compose up --build``` (full list of available options: https://docs.docker.com/reference/cli/docker/compose/up/).
 
 
-## Creating a Virtual Environment
-### Windows
-```
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-```
-### Linux/ macOS
-```
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
 
 ## Naming convention
 https://github.com/naming-convention/naming-convention-guides/blob/master/git/commit-message-naming.md
@@ -46,18 +33,5 @@ https://github.com/naming-convention/naming-convention-guides/blob/master/git/co
 https://fancy-rule-a93.notion.site/rodowisko-developerskie-12e078cd02fd8014a207e4ec7bd3cab1?pvs=4
 
 ## How to prepare database?
-From rls directory execute following:
-```
-python manage.py makemigrations
-python manage.py migrate
-```
-
-## How to wiev docs?
-In order to view auto-generated documentation do the following:
-```
-pip install -r requirements.txt
-python manage.py createsuperuser
-python manage.py runserver
-```
-After issuing second command you will be prompted to provide: username (required; default 'root'), email (optional), password (required)
-Open application followed by "/admin/doc" and log in using superuser account you created before
+Execute following command in order to supply database with initial data:
+```docker compose exec -d rls-django-web python3 manage.py loaddata initial_data.json```
