@@ -73,12 +73,14 @@ def compute_day(year, month, day, device_types):
 
     for ct_id, day_av in ct_reservations.items():
         for day_of_av, av in day_av.items():
+            if not True in list(av.values()): continue
             if day_of_av == str(day).zfill(2): to_return[f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}']["containers"].append({
                 "ct_id": str(ct_id), "availability": list(av.values())})
 
     for dev_id, day_av in dev_reservations.items():
         dev_type = DeviceType.objects.get(devices__pk = dev_id).pk
         for day_of_av, av in day_av.items():
+            if not True in list(av.values()): continue
             if day_of_av == str(day).zfill(2): to_return[f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}']["devices"].append({
                 "dev_id": str(dev_id), "dev_type": str(dev_type), "availability": list(av.values())})
 
