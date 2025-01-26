@@ -5,3 +5,11 @@ venv/
 **/*.pyo
 **/*.pyd
 users/
+rls/db.sqlite3
+.env
+common.env
+django.env
+compose.yml
+Dockerfile
+.dockerignore
+.gitignore

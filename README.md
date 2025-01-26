@@ -12,9 +12,17 @@
 - Open favourite terminal and from root of repository execute following lines:
 ```
 source .env
-docker compose up --build
+docker compose up
 ```
+If you pulled from origin and want to build fresh Docker image instead of using ```docker compose up``` invoke ```docker compose up --build``` (full list of available options: https://docs.docker.com/reference/cli/docker/compose/up/).
 ### Windows
+- Clone this repository using ```git clone https://github.com/Kar0lu/rls-backend.git```.
+- Open favourite terminal and from root of repository execute following lines:
+```
+call .env.bat
+docker compose up
+```
+If you pulled from origin and want to build fresh Docker image instead of using ```docker compose up``` invoke ```docker compose up --build``` (full list of available options: https://docs.docker.com/reference/cli/docker/compose/up/).
 
 
 ## Creating a Virtual Environment

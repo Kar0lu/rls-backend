@@ -5,8 +5,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - common.env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "$POSTGRES_DB", "-U", "$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
  
   django-web:
     build: .
@@ -19,11 +27,15 @@ services:
         source: ${HOST_MEDIA_ROOT}
         target: ${DJANGO_MEDIA_ROOT}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
     env_file:
       - django.env
-      - common.env
-      - .env
       
 volumes:
     postgres_data:
