@@ -23,10 +23,11 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     reservations = serializers.PrimaryKeyRelatedField(many = True, read_only = True)
     hours_left = serializers.SlugRelatedField(read_only = True, source = 'profile', slug_field = 'hours_left')
+    uuid = serializers.SlugRelatedField(read_only = True, source = 'profile', slug_field = 'uuid')
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'is_staff', 'email', 'date_joined', 'reservations', 'password', 'hours_left']
+        fields = ['id', 'username', 'first_name', 'last_name', 'is_staff', 'email', 'date_joined', 'reservations', 'password', 'hours_left', 'uuid']
         extra_kwargs = {'id': { 'read_only': True, 'required': False },
                         'is_staff': { 'read_only': True },
                         'date_joined': { 'read_only': True, 'required': False },
