@@ -7,7 +7,7 @@
 ## Starting application
 ### Prerequisites
 - Installed Docker (installation instructions available here: https://www.docker.com/get-started/)
-### Linux
+### Linux/MacOS
 - Clone this repository using ```git clone https://github.com/Kar0lu/rls-backend.git```.
 - Open favourite terminal and from root of repository execute following lines:
 ```
