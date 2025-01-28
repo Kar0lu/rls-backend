@@ -12,6 +12,8 @@ from backend.models import (Device,
 
 from calendar import monthrange
 
+from pprint import pprint
+
 
 def device_availability(device_types, year, month, **kwargs):
 
@@ -21,18 +23,22 @@ def device_availability(device_types, year, month, **kwargs):
         try: devices = Device.objects.all().filter(pk__in = kwargs["dev_pk"])
         except: devices = Device.objects.all().filter(device_type__pk = device_type)
         if len(list(devices)) == 0: raise NotFound(detail = f'No devices of type {device_type} found.')
+        to_return[device_type] = {}
 
         for device in devices:
             try: device_reservations = device.reservations.filter(valid_since__year = year, valid_since__month = month, valid_since__day = kwargs["day"])
             except: device_reservations = device.reservations.filter(valid_since__year = year, valid_since__month = month)
-            to_return[str(device.pk)] = {str(day).zfill(2):{str(i).zfill(2): True if i != 23 else False for i in range(0,24)}
-                                          for day in range(1, monthrange(year, month)[1]+1)}
+            
+            to_return[str(device_type)][str(device.pk)] = {
+                str(day).zfill(2):{str(i).zfill(2): True if i != 23 else False for i in range(0,24)}
+                for day in range(1, monthrange(year, month)[1]+1)
+            }
 
             for reservation in device_reservations:
                 start_slot = reservation.valid_since.time().hour
                 end_slot = reservation.valid_until.time().hour
                 for slot in range(start_slot, end_slot):
-                    to_return[str(device.pk)][str(reservation.valid_since.day).zfill(2)][str(slot).zfill(2)] = False
+                    to_return[str(device_type)][str(device.pk)][str(reservation.valid_since.day).zfill(2)][str(slot).zfill(2)] = False
 
     return to_return
 
@@ -67,23 +73,80 @@ def compute_day(year, month, day, device_types):
     ct_reservations = container_availability(year, month, kwargs = {"day": day})
     dev_reservations = device_availability(device_types, year, month, kwargs = {"day": day})
 
-    to_return = {f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}': {
-        "containers": [],
-        "devices": []
-    } }
+    tday = str(day).zfill(2)
+    tmonth = str(month).zfill(2)
+    tyear = str(year).zfill(2)
+    tdate = f'{tday}.{tmonth}.{tyear}'
 
-    for ct_id, day_av in ct_reservations.items():
-        for day_of_av, av in day_av.items():
-            if not True in list(av.values()): continue
-            if day_of_av == str(day).zfill(2): to_return[f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}']["containers"].append({
-                "ct_id": str(ct_id), "availability": list(av.values())})
+    to_return = {
+        tdate: []
+    }
 
-    for dev_id, day_av in dev_reservations.items():
-        dev_type = DeviceType.objects.get(devices__pk = dev_id).pk
-        for day_of_av, av in day_av.items():
-            if not True in list(av.values()): continue
-            if day_of_av == str(day).zfill(2): to_return[f'{ str(day).zfill(2)}.{str(month).zfill(2)}.{str(year).zfill(2)}']["devices"].append({
-                "dev_id": str(dev_id), "dev_type": str(dev_type), "availability": list(av.values())})
+    # Karol v2
+    for hour in range(0, 24):
+        thour = str(hour).zfill(2)
+        frontend_row = {"id": hour, "containers": {}, "devices": []}
+
+        # Process containers
+        for ct_key, ct_value in ct_reservations.items():
+            container_status = ct_value[tday][thour]
+            frontend_row["containers"][ct_key] = container_status
+
+            # If container is true, check if there is at least one device of each type with true value
+            if container_status:
+                all_device_types_valid = True
+
+                # Check devices for the current container
+                for dev_type_key, dev_type_value in dev_reservations.items():
+                    device_found = False
+                    for dev_key, dev_value in dev_type_value.items():
+                        if dev_value[tday][thour]:
+                            device_found = True
+                            break
+                    if not device_found:
+                        all_device_types_valid = False
+                        break
+
+                # If the container is valid, we keep it true, else set it false
+                if not all_device_types_valid:
+                    frontend_row["containers"][ct_key] = False
+
+        # Process devices
+        for dev_type_key, dev_type_value in dev_reservations.items():
+            for dev_key, dev_value in dev_type_value.items():
+                if dev_value[tday][thour]:  # Only add devices with true value
+                    frontend_row["devices"].append(dev_key)  # Append device ID to the list
+
+        to_return[tdate].append(frontend_row)
+
+    # Karol v1
+    # for hour in range(0, 24):
+    #     thour = str(hour).zfill(2)
+    #     backend_row = {"id": hour, "containers": {}, "devices": {}}
+
+    #     for ct_key, ct_value in ct_reservations.items():
+    #         backend_row["containers"][ct_key] = ct_value[tday][thour]
+
+    #     for dev_type_key, dev_type_value in dev_reservations.items():
+    #         backend_row["devices"][dev_type_key] = {}
+    #         for dev_key, dev_value in dev_type_value.items():
+    #             backend_row["devices"][dev_type_key][dev_key] = dev_value[tday][thour]
+            
+    #     to_return[tdate].append(backend_row)
+
+    # Kacper
+    # for ct_id, day_av in ct_reservations.items():
+    #     for day_of_av, av in day_av.items():
+    #         if not True in list(av.values()): continue
+    #         if day_of_av == tday: to_return[tdate]["containers"].append({
+    #             "ct_id": str(ct_id), "availability": list(av.values())})
+
+    # for dev_id, day_av in dev_reservations.items():
+    #     dev_type = DeviceType.objects.get(devices__pk = dev_id).pk
+    #     for day_of_av, av in day_av.items():
+    #         if not True in list(av.values()): continue
+    #         if day_of_av == tday: to_return[tdate]["devices"].append({
+    #             "dev_id": str(dev_id), "dev_type": str(dev_type), "availability": list(av.values())})
 
     return to_return 
 
